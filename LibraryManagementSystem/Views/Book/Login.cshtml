@@ -1,7 +1,9 @@
 ﻿@model BLL.ViewModels.LoginUser
-
+@{
+    string message = ViewBag.Message == null ? null : ViewBag.Message;
+}
 <h2>SIGN IN</h2>
-
+<h3 style="color: red;">@message</h3>
 <form method="post" asp-controller="Book" asp-action="AddBooksUser">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div>

@@ -2,6 +2,7 @@
 using LibraryDAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Text.Json.Serialization;
 
@@ -48,7 +49,6 @@ namespace LibraryManagementSystem.Controllers
             bookVM.IsIssued = true;
             if (ModelState.IsValid)
             {
-
                 HttpResponseMessage response = await _client.PostAsJsonAsync($"api/Book/Index?pass={pass}", bookVM);
 
                 if (response.IsSuccessStatusCode)
@@ -59,8 +59,14 @@ namespace LibraryManagementSystem.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string? value)
         {
+            if (value!=null)
+            {
+                ViewBag.Message = value;
+                return View();
+            }
+           
             return View();
         }
 
@@ -71,19 +77,26 @@ namespace LibraryManagementSystem.Controllers
             ViewBag.Pass = model.Password;
             if (ModelState.IsValid)
             {
+                var respon = await _client.GetAsync($"api/User/ChangeUser?pass={model.Password}");
+                var check = respon.Content.ReadAsStringAsync().Result;
+                if (check == "true")
+                {
+                    List<BookAddEditVM> books = new List<BookAddEditVM>();
+                    HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + $"api/Book/GetUserBooks?password={model.Password}");
+                    if (response.IsSuccessStatusCode && check == "true")
+                    {
+                        string data = response.Content.ReadAsStringAsync().Result;
+                        books = JsonConvert.DeserializeObject<List<BookAddEditVM>>(data);
+                        return View(books);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Login");
+                    }
+                }
+                string myString = "Please enter the correct password or register";
+                return RedirectToAction("Login",new { value = myString });
 
-                List<BookAddEditVM> books = new List<BookAddEditVM>();
-                HttpResponseMessage response = await _client.GetAsync(_client.BaseAddress + $"api/Book/GetUserBooks?password={model.Password}");
-                if (response.IsSuccessStatusCode)
-                {
-                    string data = response.Content.ReadAsStringAsync().Result;
-                    books = JsonConvert.DeserializeObject<List<BookAddEditVM>>(data);
-                    return View(books);
-                }
-                else
-                {
-                    return RedirectToAction("Login");
-                }
             }
             return RedirectToAction("Login");
         }

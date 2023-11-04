@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryDAL.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231030101245_init")]
-    partial class init
+    [Migration("20231102143552_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,7 +55,7 @@ namespace LibraryDAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("LibraryDAL.Entities.User", b =>
@@ -80,7 +80,7 @@ namespace LibraryDAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Electrices");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("LibraryDAL.Entities.Book", b =>

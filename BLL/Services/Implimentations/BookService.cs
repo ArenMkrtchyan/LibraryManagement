@@ -26,8 +26,7 @@ namespace BLL.Services.Implimentations
         public void Add(BookAddEditVM model,string pass)
         {
            Book book = new()
-            {
-               
+            {              
                 Name = model.Name,  
                 AuthorName = model.AuthorName,
                 IsIssued = model.IsIssued,                  
@@ -35,9 +34,6 @@ namespace BLL.Services.Implimentations
                 UserId= _context.Users.FirstOrDefault(us => us.Password == pass).Id,
                 Price = model.Price,
                 Quantity=model.Quantity,
-              
-
-
             };
             _context.Books.Add(book);
             _unitOfWork.Save();

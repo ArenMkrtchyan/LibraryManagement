@@ -32,5 +32,12 @@ namespace LibraryWebAPI.Controllers
             _context.SaveChanges();
            return Ok();
         }
+        [HttpGet]
+        public IActionResult ChangeUser(string pass)
+        {            
+            var data = _context.Users.FirstOrDefault(u=>u.Password==pass);
+            bool check=data==null?false:true;
+            return Ok(check);
+        }
     }
 }
